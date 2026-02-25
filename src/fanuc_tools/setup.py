@@ -27,7 +27,8 @@ setup(
             'monitor_state = fanuc_tools.monitor_state:main',
             'moveit_joint = fanuc_tools.moveit_joint:main',
             'moveit_cartesian = fanuc_tools.moveit_cartesian:main',
-            'moveit_linear = fanuc_tools.moveit_linear:main'
+            'moveit_linear = fanuc_tools.moveit_linear:main',
+            'moveit_go = fanuc_tools.moveit_go:main',
         ],
     },
 )
