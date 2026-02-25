@@ -68,12 +68,14 @@ class MoveItGo(Node):
         self.declare_parameter("pose", [0.6,0.0,0.8,0.0,1.57,0.0])
         self.declare_parameter("vel", 0.3)
         self.declare_parameter("acc", 0.3)
+        self.declare_parameter("plan_only", False)
 
         self.mode = self.get_parameter("mode").value
         self.joints = self.get_parameter("joints").value
         self.pose = self.get_parameter("pose").value
         self.vel = float(self.get_parameter("vel").value)
         self.acc = float(self.get_parameter("acc").value)
+        self.plan_only = self.get_parameter("plan_only").value
 
         self.client = ActionClient(self, MoveGroup, '/move_action')
 
@@ -157,7 +159,7 @@ class MoveItGo(Node):
         goal_msg.request.goal_constraints.append(constraints)
 
         goal_msg.planning_options = PlanningOptions()
-        goal_msg.planning_options.plan_only = False
+        goal_msg.planning_options.plan_only = self.plan_only
 
         self.get_logger().info("Sending goal...")
         future = self.client.send_goal_async(goal_msg)
