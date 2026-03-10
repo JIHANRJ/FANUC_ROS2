@@ -31,7 +31,19 @@ Run directly (without launch file):
         robot_model:=crx10ia_l use_mock:=true
 
     Then run:
-    ros2 run fanuc_tools move_joint
+    source ~/ws_fanuc/install/setup.bash
+        ros2 run fanuc_tools move_joint --ros-args \
+        -p planning_group:=manipulator \
+        -p vel:=0.1 \
+        -p acc:=0.1 \
+        -p target_joints.joint_1:=0.0 \
+        -p target_joints.joint_2:=-0.7854 \
+        -p target_joints.joint_3:=1.5708 \
+        -p target_joints.joint_4:=0.0 \
+        -p target_joints.joint_5:=0.7854 \
+        -p target_joints.joint_6:=0.0
+
+
 """
 
 import rclpy
