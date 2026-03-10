@@ -1,3 +1,5 @@
+import os
+from glob import glob
 from setuptools import find_packages, setup
 
 package_name = 'fanuc_tools'
@@ -10,6 +12,12 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        # Launch files
+        (os.path.join('share', package_name, 'motion'),
+            glob('launch/motion/*.launch.py')),
+        # Config files
+        (os.path.join('share', package_name, 'motion'),
+            glob('config/motion/*.yaml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -31,6 +39,7 @@ setup(
             'moveit_go = fanuc_tools.moveit_go:main',
             'test_program = fanuc_tools.test_program:main',
             'pick_place = fanuc_tools.pick_place:main',
+            'move_joint = fanuc_tools.motion.move_joint:main',
         ],
     },
 )

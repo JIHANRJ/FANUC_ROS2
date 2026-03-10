@@ -1,0 +1,36 @@
+# move_joint.yaml
+# ================
+# Configuration for the move_joint example node.
+#
+# Joint layout for CRX-10iA/L:
+#   joint_1 = base rotation    (+ = counterclockwise from above)
+#   joint_2 = shoulder         (+ = forward/up)
+#   joint_3 = elbow            (+ = up)
+#   joint_4 = wrist roll       (+ = counterclockwise from front)
+#   joint_5 = wrist pitch      (+ = down)
+#   joint_6 = wrist rotation   (+ = counterclockwise from front)
+#
+# Conversion: degrees * (pi/180) = radians
+#   90 deg  = 1.5708 rad
+#   45 deg  = 0.7854 rad
+#   180 deg = 3.1416 rad
+
+move_joint_node:
+  ros__parameters:
+
+    robot_model:    crx10ial
+    planning_group: manipulator
+
+    # IMPORTANT: Keep speed_scaling LOW (5-15) on first test.
+    # Only increase once you have confirmed the target is safe.
+    speed_scaling: 10.0
+
+    # Target joint positions in radians.
+    # All zeros = safe near-home position.
+    target_joints:
+      joint_1:  0.0
+      joint_2:  0.0
+      joint_3:  0.0
+      joint_4:  0.0
+      joint_5:  0.0
+      joint_6:  0.0
