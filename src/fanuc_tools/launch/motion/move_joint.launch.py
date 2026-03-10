@@ -6,6 +6,7 @@ Launch file for the move_joint example.
 Usage:
     ros2 launch fanuc_tools move_joint.launch.py
     ros2 launch fanuc_tools move_joint.launch.py use_rviz:=false
+    ros2 launch fanuc_tools move_joint.launch.py use_mock:=true
 """
 
 import os
@@ -22,7 +23,7 @@ def generate_launch_description():
     # ── Launch arguments ───────────────────────────────────────────────────────
     robot_model_arg = DeclareLaunchArgument(
         'robot_model',
-        default_value='crx10ial',
+        default_value='crx10ia_l',
         description='FANUC robot model name'
     )
 
@@ -32,8 +33,15 @@ def generate_launch_description():
         description='Launch RViz for visualisation'
     )
 
+    use_mock_arg = DeclareLaunchArgument(
+        'use_mock',
+        default_value='false',
+        description='Use mock hardware interface'
+    )
+
     robot_model = LaunchConfiguration('robot_model')
     use_rviz    = LaunchConfiguration('use_rviz')
+    use_mock    = LaunchConfiguration('use_mock')
 
     # ── Config file path ───────────────────────────────────────────────────────
     fanuc_tools_share = get_package_share_directory('fanuc_tools')
@@ -50,7 +58,7 @@ def generate_launch_description():
         launch_arguments={
             'robot_model': robot_model,
             'use_rviz':    use_rviz,
-            'use_mock':    'false',
+            'use_mock':    use_mock,
         }.items()
     )
 
@@ -66,6 +74,7 @@ def generate_launch_description():
     return LaunchDescription([
         robot_model_arg,
         use_rviz_arg,
+        use_mock_arg,
         fanuc_moveit_launch,
         move_joint_node,
     ])
