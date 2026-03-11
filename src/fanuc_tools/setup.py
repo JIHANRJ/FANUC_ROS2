@@ -40,6 +40,7 @@ setup(
             'test_program = fanuc_tools.test_program:main',
             'pick_place = fanuc_tools.pick_place:main',
             'move_joint = fanuc_tools.motion.move_joint:main',
+            'speed_scaling = fanuc_tools.motion.speed_scaling:main',
         ],
     },
 )

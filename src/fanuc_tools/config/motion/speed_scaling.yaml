@@ -1,0 +1,10 @@
+speed_scaling_node:
+  ros__parameters:
+
+    # Speed published when the node first starts (0.0 - 100.0)
+    # Set to 100.0 so robot runs at full programmed speed by default
+    initial_speed: 100.0
+
+    # How many times per second to publish the speed value
+    # Higher = more responsive to changes, 10 Hz is plenty
+    publish_rate: 10.0

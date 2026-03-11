@@ -19,16 +19,26 @@ move_joint_node:
   ros__parameters:
 
     planning_group: manipulator
-    vel: 0.1   # 10% velocity  — keep low for first test
-    acc: 0.1   # 10% acceleration — keep low for first test
+    vel: 0.3        # 30% velocity — visible but not too fast
+    acc: 0.3        # 30% acceleration
 
-    # Target joint positions in radians
-    # All zeros = safe near-home position
-    # Verify this is safe on your robot before running
-    target_joints:
+    # Seconds to wait at each position before moving to the next
+    delay_between_moves: 2.0
+
+    # Position A — near home
+    position_a:
       joint_1:  0.0
-      joint_2: -0.7854   # -45 degrees
-      joint_3:  1.5708   #  90 degrees
+      joint_2:  0.0
+      joint_3:  0.0
       joint_4:  0.0
-      joint_5:  0.7854   #  45 degrees
+      joint_5:  0.0
+      joint_6:  0.0
+
+    # Position B — visibly different so you can see the motion clearly
+    position_b:
+      joint_1:  0.5236    #  30 degrees
+      joint_2: -0.7854    # -45 degrees
+      joint_3:  1.5708    #  90 degrees
+      joint_4:  0.0
+      joint_5:  0.7854    #  45 degrees
       joint_6:  0.0
