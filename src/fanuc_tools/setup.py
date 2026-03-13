@@ -42,6 +42,7 @@ setup(
             'move_joint = fanuc_tools.motion.move_joint:main',
             'speed_scaling = fanuc_tools.motion.speed_scaling:main',
             'collaborative_speed = fanuc_tools.motion.collaborative_speed:main',
+            'move_cartesian = fanuc_tools.motion.move_cartesian:main',
             'jog_ps4 = fanuc_tools.jog_ps4:main',
         ],
     },

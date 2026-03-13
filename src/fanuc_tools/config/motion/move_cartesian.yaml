@@ -1,0 +1,36 @@
+move_cartesian_node:
+  ros__parameters:
+
+    planning_group:     manipulator
+    end_effector_link:  end_effector  # TCP link name from CRX URDF
+    reference_frame:    world         # all poses relative to this frame
+
+    vel: 0.1    # 10% velocity — safe for first test
+    acc: 0.1    # 10% acceleration
+
+    delay_between_moves: 2.0    # seconds between A and B
+
+    # How close is close enough
+    position_tolerance:    0.001   # metres  (~1mm)
+    orientation_tolerance: 0.01    # radians (~0.5 deg)
+
+    # ── Pose A ───────────────────────────────────────────────────────
+    # Position in metres, rotation in degrees
+    # Start with a pose you know is reachable on your robot.
+    # Check RViz with mock hardware first before running on real robot.
+    position_a:
+      x:      0.5     # 500mm forward from base
+      y:      0.0     # centred
+      z:      0.5     # 500mm above base
+      roll:   180.0   # tool pointing down (typical pick orientation)
+      pitch:  0.0
+      yaw:    0.0
+
+    # ── Pose B ───────────────────────────────────────────────────────
+    position_b:
+      x:      0.5
+      y:      0.2     # 200mm to the left
+      z:      0.3     # lower
+      roll:   180.0
+      pitch:  0.0
+      yaw:    0.0
