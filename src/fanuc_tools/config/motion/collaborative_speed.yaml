@@ -1,0 +1,6 @@
+collaborative_speed_node:
+  ros__parameters:
+
+    # Topic published by fanuc_gpio_controller
+    # Change this if your controller namespace is different
+    topic: /fanuc_gpio_controller/collaborative_speed_scaling

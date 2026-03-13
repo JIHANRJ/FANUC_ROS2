@@ -41,6 +41,7 @@ setup(
             'pick_place = fanuc_tools.pick_place:main',
             'move_joint = fanuc_tools.motion.move_joint:main',
             'speed_scaling = fanuc_tools.motion.speed_scaling:main',
+            'collaborative_speed = fanuc_tools.motion.collaborative_speed:main',
             'jog_ps4 = fanuc_tools.jog_ps4:main',
         ],
     },
