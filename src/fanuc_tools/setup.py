@@ -12,12 +12,19 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        # Launch files
+        # Motion launch + config
         (os.path.join('share', package_name, 'motion'),
             glob('launch/motion/*.launch.py')),
-        # Config files
         (os.path.join('share', package_name, 'motion'),
             glob('config/motion/*.yaml')),
+        # TCP launch + config
+        (os.path.join('share', package_name, 'tcp'),
+            glob('launch/tcp/*.launch.py')),
+        (os.path.join('share', package_name, 'tcp'),
+            glob('config/tcp/*.yaml')),
+        # URDF files
+        (os.path.join('share', package_name, 'urdf'),
+            glob('urdf/*.urdf.xacro')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -43,6 +50,7 @@ setup(
             'speed_scaling = fanuc_tools.motion.speed_scaling:main',
             'collaborative_speed = fanuc_tools.motion.collaborative_speed:main',
             'move_cartesian = fanuc_tools.motion.move_cartesian:main',
+            'move_linear = fanuc_tools.motion.move_linear:main',
             'jog_ps4 = fanuc_tools.jog_ps4:main',
         ],
     },

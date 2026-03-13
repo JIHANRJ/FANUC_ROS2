@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+pointer.urdf.xacro
+==================
+Defines a simple pointer tool attached to the FANUC CRX-10iA/L flange.
+
+What it defines:
+    - A thin red cylinder (100mm long, 5mm radius) for visualisation
+    - A pointer_tcp frame at the tip for MoveIt to plan to
+
+How to use:
+    This file is included into the combined pointer robot model.
+    In motion scripts set:
+        end_effector_link: pointer_tcp
+
+Coordinate convention:
+  +X points along the pointer (away from the flange face)
+  pointer_tcp is 100mm from end_effector along +X
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="pointer">
+
+  <xacro:macro name="pointer_tool" params="parent tcp_link:='pointer_tcp' prefix:=''">
+    <!-- ── Pointer visual link ────────────────────────────────────────── -->
+    <link name="${prefix}pointer_link">
+      <visual>
+        <geometry>
+          <cylinder length="0.1" radius="0.005"/>
+        </geometry>
+        <origin xyz="0.05 0 0" rpy="0 1.57079632679 0"/>
+        <material name="red">
+          <color rgba="1.0 0.0 0.0 1.0"/>
+        </material>
+      </visual>
+
+      <collision>
+        <geometry>
+          <cylinder length="0.1" radius="0.005"/>
+        </geometry>
+        <origin xyz="0.05 0 0" rpy="0 1.57079632679 0"/>
+      </collision>
+
+      <inertial>
+        <mass value="0.01"/>
+        <origin xyz="0.05 0 0" rpy="0 0 0"/>
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0"
+                 izz="0.0001"/>
+      </inertial>
+    </link>
+
+    <!-- ── Joint: end_effector → pointer_link ────────────────────────── -->
+    <joint name="${prefix}pointer_mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${prefix}pointer_link"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <!-- ── TCP frame link ─────────────────────────────────────────────── -->
+    <link name="${prefix}${tcp_link}"/>
+
+    <!-- ── Joint: pointer_link → pointer_tcp ─────────────────────────── -->
+    <joint name="${prefix}pointer_to_tcp" type="fixed">
+      <parent link="${prefix}pointer_link"/>
+      <child link="${prefix}${tcp_link}"/>
+      <origin xyz="0.1 0 0" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+
+</robot>

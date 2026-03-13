@@ -1,10 +1,10 @@
 """
-move_cartesian.launch.py
-========================
-Launches MoveIt with the pointer tool + move_cartesian node.
+move_linear.launch.py
+=====================
+Launches MoveIt with the pointer tool + move_linear node.
 
 Usage:
-    ros2 launch fanuc_tools move_cartesian.launch.py use_mock:=true
+    ros2 launch fanuc_tools move_linear.launch.py use_mock:=true
 """
 
 import os
@@ -29,25 +29,25 @@ def generate_launch_description():
 
     config = os.path.join(
         get_package_share_directory('fanuc_tools'),
-        'motion', 'move_cartesian.yaml'
+        'motion', 'move_linear.yaml'
     )
 
-    fanuc_moveit_share  = get_package_share_directory('fanuc_moveit_config')
+    fanuc_moveit_share = get_package_share_directory('fanuc_moveit_config')
     fanuc_moveit_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(fanuc_moveit_share, 'launch', 'fanuc_moveit.launch.py')
         ),
         launch_arguments={
             'robot_model': 'crx10ia_l_pointer',
-            'use_rviz':    LaunchConfiguration('use_rviz'),
-            'use_mock':    LaunchConfiguration('use_mock'),
+            'use_rviz': LaunchConfiguration('use_rviz'),
+            'use_mock': LaunchConfiguration('use_mock'),
         }.items()
     )
 
-    move_cartesian_node = Node(
+    move_linear_node = Node(
         package='fanuc_tools',
-        executable='move_cartesian',
-        name='move_cartesian_node',
+        executable='move_linear',
+        name='move_linear_node',
         output='screen',
         parameters=[config]
     )
@@ -56,5 +56,5 @@ def generate_launch_description():
         use_rviz_arg,
         use_mock_arg,
         fanuc_moveit_launch,
-        move_cartesian_node,
+        move_linear_node,
     ])

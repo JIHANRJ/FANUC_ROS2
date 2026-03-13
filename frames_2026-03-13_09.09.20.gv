@@ -1,0 +1,19 @@
+digraph G {
+"base_link" -> "J1_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"world" -> "base_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"J1_link" -> "J2_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"J2_link" -> "J3_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"J3_link" -> "J4_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"J4_link" -> "J5_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"J5_link" -> "J6_link"[label=" Broadcaster: default_authority\nAverage rate: 19.642\nBuffer length: 4.48\nMost recent transform: 1773392960.750476\nOldest transform: 1773392956.270315\n"];
+"J6_link" -> "flange"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"base_link" -> "wbase"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"flange" -> "end_effector"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"flange" -> "fanuc_flange"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"end_effector" -> "pointer_link"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+"pointer_link" -> "pointer_tcp"[label=" Broadcaster: default_authority\nAverage rate: 10000.0\nBuffer length: 0.0\nMost recent transform: 0.0\nOldest transform: 0.0\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1773392960.757778"[ shape=plaintext ] ;
+}->"world";
+}

@@ -1,0 +1,46 @@
+move_linear_node:
+  ros__parameters:
+
+    planning_group:     manipulator
+    end_effector_link:  pointer_tcp
+    reference_frame:    world
+
+    vel: 0.1
+    acc: 0.1
+
+    eef_step: 0.01
+    jump_threshold: 0.0
+    delay_between_squares: 2.0
+
+    # 200mm x 200mm square, centered at x=0.6, y=0.0, z=0.5
+    corner_1:
+      x:      0.5
+      y:      0.1
+      z:      0.5
+      roll:   180.0
+      pitch:  0.0
+      yaw:    0.0
+
+    corner_2:
+      x:      0.7
+      y:      0.1
+      z:      0.5
+      roll:   180.0
+      pitch:  0.0
+      yaw:    0.0
+
+    corner_3:
+      x:      0.7
+      y:     -0.1
+      z:      0.5
+      roll:   180.0
+      pitch:  0.0
+      yaw:    0.0
+
+    corner_4:
+      x:      0.5
+      y:     -0.1
+      z:      0.5
+      roll:   180.0
+      pitch:  0.0
+      yaw:    0.0
