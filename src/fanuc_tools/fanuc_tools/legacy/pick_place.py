@@ -1,6 +1,6 @@
 import rclpy
 import time
-from fanuc_tools.crx_interface import CRX
+from fanuc_tools.legacy.crx_interface import CRX
 
 
 def main():

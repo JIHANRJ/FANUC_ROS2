@@ -38,15 +38,16 @@ Parameter method:
        ros2 launch fanuc_tools move_joint.launch.py \
            use_mock:=true \
            vel:=0.2 acc:=0.2 delay_between_moves:=1.5 \
-           position_a.joint_1:=0.0 position_a.joint_2:=-0.6 position_a.joint_3:=1.0 \
-           position_a.joint_4:=0.0 position_a.joint_5:=0.6 position_a.joint_6:=0.0 \
-           position_b.joint_1:=0.2 position_b.joint_2:=-0.8 position_b.joint_3:=1.2 \
-           position_b.joint_4:=0.1 position_b.joint_5:=0.8 position_b.joint_6:=0.2
+           position_a.joint_1:=0.0 position_a.joint_2:=0.0 position_a.joint_3:=0.0 \
+           position_a.joint_4:=0.0 position_a.joint_5:=0.0 position_a.joint_6:=0.0 \
+           position_b.joint_1:=15.0 position_b.joint_2:=-20.0 position_b.joint_3:=35.0 \
+           position_b.joint_4:=0.0 position_b.joint_5:=10.0 position_b.joint_6:=0.0
 
     2) Or load from YAML using --ros-args:
        ros2 run fanuc_tools move_joint --ros-args --params-file /path/to/move_joint_params.yaml
 """
 
+import math
 import time
 import rclpy
 from rclpy.node import Node
@@ -73,13 +74,14 @@ class MoveJointNode(Node):
         # ── Parameters ──────────────────────────────────────────────────────
         # Parameter method notes:
         # - `vel`, `acc`: scaling factors in range [0.0, 1.0]
-        # - `position_a.*` and `position_b.*`: joint targets in radians
+        # - `position_a.*` and `position_b.*`: joint targets in DEGREES
         # - Recommended to provide all six joints for each position
         # - You can set params via launch overrides or a YAML params file
         self.declare_parameter('planning_group', 'manipulator')
         self.declare_parameter('vel', 0.1)
         self.declare_parameter('acc', 0.1)
         self.declare_parameter('delay_between_moves', 2.0)  # seconds
+        self.declare_parameter('startup_delay', 5.0)        # seconds
 
         # Position A — first target
         self.declare_parameter('position_a.joint_1', 0.0)
@@ -102,28 +104,31 @@ class MoveJointNode(Node):
         self.vel                 = float(self.get_parameter('vel').value)
         self.acc                 = float(self.get_parameter('acc').value)
         self.delay_between_moves = float(self.get_parameter('delay_between_moves').value)
+        self.startup_delay       = float(self.get_parameter('startup_delay').value)
 
+        # YAML values are in degrees — convert to radians for MoveIt
         self.position_a = [
-            self.get_parameter('position_a.joint_1').value,
-            self.get_parameter('position_a.joint_2').value,
-            self.get_parameter('position_a.joint_3').value,
-            self.get_parameter('position_a.joint_4').value,
-            self.get_parameter('position_a.joint_5').value,
-            self.get_parameter('position_a.joint_6').value,
+            math.radians(self.get_parameter('position_a.joint_1').value),
+            math.radians(self.get_parameter('position_a.joint_2').value),
+            math.radians(self.get_parameter('position_a.joint_3').value),
+            math.radians(self.get_parameter('position_a.joint_4').value),
+            math.radians(self.get_parameter('position_a.joint_5').value),
+            math.radians(self.get_parameter('position_a.joint_6').value),
         ]
 
         self.position_b = [
-            self.get_parameter('position_b.joint_1').value,
-            self.get_parameter('position_b.joint_2').value,
-            self.get_parameter('position_b.joint_3').value,
-            self.get_parameter('position_b.joint_4').value,
-            self.get_parameter('position_b.joint_5').value,
-            self.get_parameter('position_b.joint_6').value,
+            math.radians(self.get_parameter('position_b.joint_1').value),
+            math.radians(self.get_parameter('position_b.joint_2').value),
+            math.radians(self.get_parameter('position_b.joint_3').value),
+            math.radians(self.get_parameter('position_b.joint_4').value),
+            math.radians(self.get_parameter('position_b.joint_5').value),
+            math.radians(self.get_parameter('position_b.joint_6').value),
         ]
 
         self.get_logger().info(f'Planning group      : {self.planning_group}')
         self.get_logger().info(f'Velocity scale      : {self.vel}')
         self.get_logger().info(f'Accel scale         : {self.acc}')
+        self.get_logger().info(f'Startup delay       : {self.startup_delay}s')
         self.get_logger().info(f'Delay between moves : {self.delay_between_moves}s')
         self.get_logger().info(f'Position A          : {self.position_a}')
         self.get_logger().info(f'Position B          : {self.position_b}')
@@ -136,9 +141,11 @@ class MoveJointNode(Node):
 
         # ── State tracking ───────────────────────────────────────────────────
         # Tracks which position we're going to next
-        self.current_target = 'A'
+        self.current_target = 'B'  # start with visible motion instead of A->A no-op
         self.motion_in_progress = False
         self.iteration = 0
+        self.start_time = time.monotonic()
+        self.startup_wait_logged = False
 
         # ── Start loop ───────────────────────────────────────────────────────
         # Wait 1 second for MoveIt to be ready, then start the loop
@@ -150,6 +157,15 @@ class MoveJointNode(Node):
         Only sends a new goal when no motion is currently in progress.
         This prevents overlapping goals being sent to MoveIt.
         """
+        elapsed = time.monotonic() - self.start_time
+        if elapsed < self.startup_delay:
+            if not self.startup_wait_logged:
+                self.get_logger().info(
+                    f'Waiting {self.startup_delay:.1f}s startup delay for MoveIt/controllers...'
+                )
+                self.startup_wait_logged = True
+            return
+
         if not self.motion_in_progress:
             self.motion_in_progress = True
             target = self.position_a if self.current_target == 'A' else self.position_b
@@ -157,6 +173,8 @@ class MoveJointNode(Node):
             self.get_logger().info(
                 f'Iteration {self.iteration + 1} — Moving to Position {self.current_target}'
             )
+            target_deg = [round(math.degrees(value), 1) for value in target]
+            self.get_logger().info(f'Target (deg)        : {target_deg}')
             self.send_goal(target)
 
     def send_goal(self, target_joints):

@@ -172,7 +172,11 @@ def main(args=None):
         node.get_logger().info('Interrupted by user.')
     finally:
         node.destroy_node()
-        rclpy.shutdown()
+        try:
+            rclpy.shutdown()
+        except RuntimeError:
+            # Context may have already been shut down via 'q' in the input thread
+            pass
 
 
 if __name__ == '__main__':
