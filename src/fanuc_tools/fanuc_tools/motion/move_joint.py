@@ -32,6 +32,19 @@ Run alongside speed_scaling.py to control speed during motion:
 
 Usage:
     ros2 launch fanuc_tools move_joint.launch.py use_mock:=true
+
+Parameter method:
+    1) Pass parameters directly in launch command:
+       ros2 launch fanuc_tools move_joint.launch.py \
+           use_mock:=true \
+           vel:=0.2 acc:=0.2 delay_between_moves:=1.5 \
+           position_a.joint_1:=0.0 position_a.joint_2:=-0.6 position_a.joint_3:=1.0 \
+           position_a.joint_4:=0.0 position_a.joint_5:=0.6 position_a.joint_6:=0.0 \
+           position_b.joint_1:=0.2 position_b.joint_2:=-0.8 position_b.joint_3:=1.2 \
+           position_b.joint_4:=0.1 position_b.joint_5:=0.8 position_b.joint_6:=0.2
+
+    2) Or load from YAML using --ros-args:
+       ros2 run fanuc_tools move_joint --ros-args --params-file /path/to/move_joint_params.yaml
 """
 
 import time
@@ -58,6 +71,11 @@ class MoveJointNode(Node):
         super().__init__('move_joint_node')
 
         # ── Parameters ──────────────────────────────────────────────────────
+        # Parameter method notes:
+        # - `vel`, `acc`: scaling factors in range [0.0, 1.0]
+        # - `position_a.*` and `position_b.*`: joint targets in radians
+        # - Recommended to provide all six joints for each position
+        # - You can set params via launch overrides or a YAML params file
         self.declare_parameter('planning_group', 'manipulator')
         self.declare_parameter('vel', 0.1)
         self.declare_parameter('acc', 0.1)
