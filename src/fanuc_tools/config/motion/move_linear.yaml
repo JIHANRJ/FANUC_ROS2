@@ -5,42 +5,42 @@ move_linear_node:
     end_effector_link:  pointer_tcp
     reference_frame:    world
 
-    vel: 0.1
-    acc: 0.1
+    vel: 0.5
+    acc: 0.3
 
     eef_step: 0.01
     jump_threshold: 0.0
     delay_between_squares: 2.0
 
-    # 200mm x 200mm square, centered at x=0.6, y=0.0, z=0.5
+    # 200mm x 200mm square, centered at x=0.8, y=0.0, z=0.75
     corner_1:
-      x:      0.5
+      x:      0.7
       y:      0.1
-      z:      0.5
+      z:      0.75
       roll:   180.0
       pitch:  0.0
       yaw:    0.0
 
     corner_2:
-      x:      0.7
+      x:      0.9
       y:      0.1
-      z:      0.5
+      z:      0.75
       roll:   180.0
       pitch:  0.0
       yaw:    0.0
 
     corner_3:
-      x:      0.7
+      x:      0.9
       y:     -0.1
-      z:      0.5
+      z:      0.75
       roll:   180.0
       pitch:  0.0
       yaw:    0.0
 
     corner_4:
-      x:      0.5
+      x:      0.7
       y:     -0.1
-      z:      0.5
+      z:      0.75
       roll:   180.0
       pitch:  0.0
       yaw:    0.0
