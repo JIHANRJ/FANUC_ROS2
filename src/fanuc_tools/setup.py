@@ -47,6 +47,7 @@ setup(
             'test_program = fanuc_tools.legacy.test_program:main',
             'pick_place = fanuc_tools.legacy.pick_place:main',
             'move_joint = fanuc_tools.motion.move_joint:main',
+            'modular_joint_demo = fanuc_tools.motion.modular_joint_demo:main',
             'speed_scaling = fanuc_tools.motion.speed_scaling:main',
             'collaborative_speed = fanuc_tools.motion.collaborative_speed:main',
             'move_cartesian = fanuc_tools.motion.move_cartesian:main',

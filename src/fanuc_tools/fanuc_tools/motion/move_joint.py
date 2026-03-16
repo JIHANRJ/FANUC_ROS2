@@ -74,7 +74,7 @@ class MoveJointLoopConfig:
     startup_delay: float = 5.0
     delay_between_moves: float = 2.0
     position_a_deg: tuple[float, ...] = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-    position_b_deg: tuple[float, ...] = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    position_b_deg: tuple[float, ...] = (30.0, -25.0, 40.0, 0.0, 15.0, 0.0)
 
     @classmethod
     def from_node_parameters(cls, node: Node) -> 'MoveJointLoopConfig':
@@ -98,9 +98,14 @@ def declare_move_joint_parameters(node: Node) -> None:
     node.declare_parameter('delay_between_moves', 2.0)
     node.declare_parameter('startup_delay', 5.0)
 
-    for prefix in ('position_a', 'position_b'):
-        for index in range(1, 7):
-            node.declare_parameter(f'{prefix}.joint_{index}', 0.0)
+    position_a_defaults = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    position_b_defaults = (30.0, -25.0, 40.0, 0.0, 15.0, 0.0)
+
+    for index, default in enumerate(position_a_defaults, start=1):
+        node.declare_parameter(f'position_a.joint_{index}', default)
+
+    for index, default in enumerate(position_b_defaults, start=1):
+        node.declare_parameter(f'position_b.joint_{index}', default)
 
 
 def read_joint_vector_degrees(node: Node, prefix: str) -> list[float]:

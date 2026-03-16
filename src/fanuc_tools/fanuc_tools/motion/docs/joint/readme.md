@@ -13,6 +13,7 @@ Assumes ROS environment is already sourced.
 
 - `ros2 launch fanuc_tools move_joint.launch.py use_mock:=true use_rviz:=false`
 - `ros2 run fanuc_tools move_joint`
+- `ros2 run fanuc_tools modular_joint_demo`
 - `ros2 run fanuc_tools speed_scaling`
 
 ## Modular function tests

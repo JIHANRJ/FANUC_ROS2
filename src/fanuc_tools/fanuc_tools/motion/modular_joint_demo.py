@@ -43,7 +43,7 @@ class ModularJointDemoNode(Node):
             float(self.get_parameter(f'target_deg.joint_{index}').value)
             for index in range(1, 7)
         ]
-
+        # Joint Motion client with modular configuration:
         self.motion_client = JointMotionClient(
             self,
             planning_group=self.planning_group,
@@ -67,7 +67,7 @@ class ModularJointDemoNode(Node):
 
         if time.monotonic() - self.start_time < self.startup_delay:
             return
-
+        # Deg -> Rad conversion helper:
         target_rad = degrees_to_radians(self.target_deg)
         self.get_logger().info(f'Target (rad)   : {target_rad}')
         self.get_logger().info(f'Target map     : {named_joint_map(target_rad)}')
@@ -79,6 +79,7 @@ class ModularJointDemoNode(Node):
 
         self.sent = True
         self.get_logger().info('Sending modular demo goal...')
+        # Send the goal with modular client, and register callbacks for response and result:
         self.motion_client.send_goal(
             target_rad,
             goal_response_callback=self.on_goal_response,
