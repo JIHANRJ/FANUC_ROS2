@@ -10,7 +10,6 @@ clean API that other code can import without inheriting the looping example.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field
 from typing import Callable, Optional, Sequence
 
 from rclpy.action import ActionClient
@@ -22,21 +21,6 @@ from moveit_msgs.msg import Constraints, JointConstraint, MotionPlanRequest, Pla
 
 DEFAULT_JOINT_NAMES = ('J1', 'J2', 'J3', 'J4', 'J5', 'J6')
 GOAL_REJECTED_ERROR_CODE = 99999
-
-
-@dataclass(frozen=True)
-class JointMotionSettings:
-    """Settings used to build and send a MoveIt joint goal."""
-
-    planning_group: str = 'manipulator'
-    vel: float = 0.1
-    acc: float = 0.1
-    action_name: str = '/move_action'
-    joint_names: Sequence[str] = field(default_factory=lambda: DEFAULT_JOINT_NAMES)
-    tolerance_above: float = 0.01
-    tolerance_below: float = 0.01
-    constraint_weight: float = 1.0
-    plan_only: bool = False
 
 
 def degrees_to_radians(values_deg: Sequence[float]) -> list[float]:
@@ -60,19 +44,23 @@ def named_joint_map(
 
 def build_joint_constraints(
     target_joints: Sequence[float],
-    settings: JointMotionSettings,
+    *,
+    joint_names: Sequence[str] = DEFAULT_JOINT_NAMES,
+    tolerance_above: float = 0.01,
+    tolerance_below: float = 0.01,
+    constraint_weight: float = 1.0,
 ) -> Constraints:
     """Build MoveIt `Constraints` for a target joint vector in radians."""
-    _validate_joint_vector(target_joints, settings.joint_names)
+    _validate_joint_vector(target_joints, joint_names)
 
     constraints = Constraints()
-    for name, position in zip(settings.joint_names, target_joints):
+    for name, position in zip(joint_names, target_joints):
         joint_constraint = JointConstraint()
         joint_constraint.joint_name = name
         joint_constraint.position = float(position)
-        joint_constraint.tolerance_above = settings.tolerance_above
-        joint_constraint.tolerance_below = settings.tolerance_below
-        joint_constraint.weight = settings.constraint_weight
+        joint_constraint.tolerance_above = tolerance_above
+        joint_constraint.tolerance_below = tolerance_below
+        joint_constraint.weight = constraint_weight
         constraints.joint_constraints.append(joint_constraint)
 
     return constraints
@@ -80,20 +68,34 @@ def build_joint_constraints(
 
 def build_move_group_goal(
     target_joints: Sequence[float],
-    settings: JointMotionSettings,
+    *,
+    planning_group: str = 'manipulator',
+    vel: float = 0.1,
+    acc: float = 0.1,
+    plan_only: bool = False,
+    joint_names: Sequence[str] = DEFAULT_JOINT_NAMES,
+    tolerance_above: float = 0.01,
+    tolerance_below: float = 0.01,
+    constraint_weight: float = 1.0,
 ) -> MoveGroup.Goal:
     """Build a `MoveGroup.Goal` for a target joint vector in radians."""
-    constraints = build_joint_constraints(target_joints, settings)
+    constraints = build_joint_constraints(
+        target_joints,
+        joint_names=joint_names,
+        tolerance_above=tolerance_above,
+        tolerance_below=tolerance_below,
+        constraint_weight=constraint_weight,
+    )
 
     goal_msg = MoveGroup.Goal()
     goal_msg.request = MotionPlanRequest()
-    goal_msg.request.group_name = settings.planning_group
+    goal_msg.request.group_name = planning_group
     goal_msg.request.goal_constraints.append(constraints)
-    goal_msg.request.max_velocity_scaling_factor = float(settings.vel)
-    goal_msg.request.max_acceleration_scaling_factor = float(settings.acc)
+    goal_msg.request.max_velocity_scaling_factor = float(vel)
+    goal_msg.request.max_acceleration_scaling_factor = float(acc)
 
     goal_msg.planning_options = PlanningOptions()
-    goal_msg.planning_options.plan_only = settings.plan_only
+    goal_msg.planning_options.plan_only = plan_only
     return goal_msg
 
 
@@ -105,10 +107,30 @@ class JointMotionClient:
     `send_goal_degrees()` with your target joint vector.
     """
 
-    def __init__(self, node: Node, settings: Optional[JointMotionSettings] = None):
+    def __init__(
+        self,
+        node: Node,
+        *,
+        planning_group: str = 'manipulator',
+        vel: float = 0.1,
+        acc: float = 0.1,
+        action_name: str = '/move_action',
+        joint_names: Sequence[str] = DEFAULT_JOINT_NAMES,
+        tolerance_above: float = 0.01,
+        tolerance_below: float = 0.01,
+        constraint_weight: float = 1.0,
+        plan_only: bool = False,
+    ):
         self.node = node
-        self.settings = settings or JointMotionSettings()
-        self.action_client = ActionClient(node, MoveGroup, self.settings.action_name)
+        self.planning_group = planning_group
+        self.vel = float(vel)
+        self.acc = float(acc)
+        self.joint_names = tuple(joint_names)
+        self.tolerance_above = float(tolerance_above)
+        self.tolerance_below = float(tolerance_below)
+        self.constraint_weight = float(constraint_weight)
+        self.plan_only = bool(plan_only)
+        self.action_client = ActionClient(node, MoveGroup, action_name)
 
     def wait_for_server(self, timeout_sec: Optional[float] = None) -> bool:
         """Wait for the MoveIt action server to become available."""
@@ -125,7 +147,17 @@ class JointMotionClient:
         result_callback: Optional[Callable[[int, object], None]] = None,
     ):
         """Send a target joint vector in radians to MoveIt asynchronously."""
-        goal_msg = build_move_group_goal(target_joints, self.settings)
+        goal_msg = build_move_group_goal(
+            target_joints,
+            planning_group=self.planning_group,
+            vel=self.vel,
+            acc=self.acc,
+            plan_only=self.plan_only,
+            joint_names=self.joint_names,
+            tolerance_above=self.tolerance_above,
+            tolerance_below=self.tolerance_below,
+            constraint_weight=self.constraint_weight,
+        )
         future = self.action_client.send_goal_async(goal_msg)
         future.add_done_callback(
             lambda done_future: self._handle_goal_response(

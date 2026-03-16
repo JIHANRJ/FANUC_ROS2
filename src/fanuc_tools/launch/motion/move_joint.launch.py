@@ -10,6 +10,7 @@ Usage:
 """
 
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -43,12 +44,6 @@ def generate_launch_description():
     use_rviz    = LaunchConfiguration('use_rviz')
     use_mock    = LaunchConfiguration('use_mock')
 
-    # ── Config file path ───────────────────────────────────────────────────────
-    fanuc_tools_share = get_package_share_directory('fanuc_tools')
-    move_joint_config = os.path.join(
-        fanuc_tools_share, 'motion', 'move_joint.yaml'
-    )
-
     # ── Include FANUC MoveIt bringup ───────────────────────────────────────────
     fanuc_moveit_share  = get_package_share_directory('fanuc_moveit_config')
     fanuc_moveit_launch = IncludeLaunchDescription(
@@ -67,8 +62,7 @@ def generate_launch_description():
         package='fanuc_tools',
         executable='move_joint',
         name='move_joint_node',
-        output='screen',
-        parameters=[move_joint_config]
+        output='screen'
     )
 
     return LaunchDescription([

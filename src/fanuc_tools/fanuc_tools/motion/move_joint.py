@@ -2,7 +2,6 @@
 move_joint.py
 =============
 Quick run:
-    source /opt/ros/humble/setup.bash && source ~/ws_fanuc/install/setup.bash
     ros2 launch fanuc_tools move_joint.launch.py use_mock:=true use_rviz:=false
     ros2 run fanuc_tools speed_scaling
 
@@ -60,7 +59,6 @@ from rclpy.node import Node
 from fanuc_tools.motion.joint_motion import (
     GOAL_REJECTED_ERROR_CODE,
     JointMotionClient,
-    JointMotionSettings,
     degrees_to_radians,
     radians_to_degrees,
 )
@@ -91,15 +89,6 @@ class MoveJointLoopConfig:
             position_a_deg=tuple(read_joint_vector_degrees(node, 'position_a')),
             position_b_deg=tuple(read_joint_vector_degrees(node, 'position_b')),
         )
-
-    def motion_settings(self) -> JointMotionSettings:
-        """Convert loop config into reusable `JointMotionSettings`."""
-        return JointMotionSettings(
-            planning_group=self.planning_group,
-            vel=self.vel,
-            acc=self.acc,
-        )
-
 
 def declare_move_joint_parameters(node: Node) -> None:
     """Declare all parameters used by the standalone `move_joint` node."""
@@ -134,7 +123,12 @@ class MoveJointNode(Node):
         super().__init__('move_joint_node')
 
         self.config = MoveJointLoopConfig.from_node_parameters(self)
-        self.motion_client = JointMotionClient(self, self.config.motion_settings())
+        self.motion_client = JointMotionClient(
+            self,
+            planning_group=self.config.planning_group,
+            vel=self.config.vel,
+            acc=self.config.acc,
+        )
 
         self.position_a = degrees_to_radians(self.config.position_a_deg)
         self.position_b = degrees_to_radians(self.config.position_b_deg)
