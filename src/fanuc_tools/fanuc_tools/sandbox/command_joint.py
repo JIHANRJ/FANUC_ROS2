@@ -4,8 +4,7 @@ command_joints.py
 Send a joint goal to MoveIt.
 
 Usage:
-    Terminal 1: ros2 launch fanuc_moveit_config fanuc_moveit.launch.py
-                    robot_model:=crx10ia_l use_mock:=true
+    Terminal 1: ros2 launch fanuc_moveit_config fanuc_moveit.launch.py robot_model:=crx10ia_l use_mock:=true
     Terminal 2: python3 sandbox/command_joints.py
 """
 
