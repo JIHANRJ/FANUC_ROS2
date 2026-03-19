@@ -19,6 +19,15 @@ from fanuc_tools.motion.speed_control import (
 	clamp_speed,
 	speed_to_int,
 )
+from fanuc_tools.motion.cartesian_motion import (
+	CartesianMotionClient,
+	CartesianWaypoint,
+	build_cartesian_constraints,
+	quaternion_to_rpy,
+	rpy_to_quaternion,
+	slerp_quaternion,
+	validate_waypoint_spacing,
+)
 
 __all__ = [
 	'DEFAULT_JOINT_NAMES',
@@ -36,4 +45,11 @@ __all__ = [
 	'SpeedScalingController',
 	'clamp_speed',
 	'speed_to_int',
+	'CartesianMotionClient',
+	'CartesianWaypoint',
+	'build_cartesian_constraints',
+	'quaternion_to_rpy',
+	'rpy_to_quaternion',
+	'slerp_quaternion',
+	'validate_waypoint_spacing',
 ]
