@@ -9,7 +9,7 @@ This file is a library (not a standalone node). Use it by importing into your no
 ## Quick import example
 
 ```python
-from fanuc_tools.motion.joint_motion import JointMotionClient
+from fanuc_tools.motion.core.joint_motion import JointMotionClient
 
 motion = JointMotionClient(
     node,

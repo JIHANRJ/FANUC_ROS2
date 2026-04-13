@@ -8,7 +8,7 @@ import time
 import rclpy
 from rclpy.node import Node
 
-from fanuc_tools.motion.cartesian_motion import CartesianMotionClient, CartesianWaypoint
+from fanuc_tools.motion.core.cartesian_motion import CartesianMotionClient, CartesianWaypoint
 
 
 def gripper_open() -> None:

@@ -5,7 +5,7 @@ Reusable modular speed helpers for import into any ROS node.
 ## Quick import example
 
 ```python
-from fanuc_tools.motion.speed_control import SpeedScalingClient
+from fanuc_tools.motion.core.speed_control import SpeedScalingClient
 
 speed = SpeedScalingClient(node, topic='/speed_scaling_factor', initial_speed=100.0)
 speed.set_speed(50.0, publish=True)

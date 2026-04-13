@@ -19,7 +19,7 @@ import threading
 import rclpy
 from rclpy.node import Node
 
-from fanuc_tools.motion.speed_control import (
+from fanuc_tools.motion.core.speed_control import (
     MAX_SPEED,
     MIN_SPEED,
     SCALING_TOPIC,

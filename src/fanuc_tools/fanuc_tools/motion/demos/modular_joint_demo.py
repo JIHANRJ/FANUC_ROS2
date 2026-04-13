@@ -12,7 +12,7 @@ import time
 import rclpy
 from rclpy.node import Node
 
-from fanuc_tools.motion.joint_motion import (
+from fanuc_tools.motion.core.joint_motion import (
     GOAL_REJECTED_ERROR_CODE,
     JointMotionClient,
     degrees_to_radians,

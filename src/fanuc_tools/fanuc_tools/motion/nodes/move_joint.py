@@ -23,7 +23,7 @@ Key concepts:
     - MoveGroup action: MoveIt2 interface for planning + execution
     - JointConstraint: target position for each joint
     - Loop with delay: move A→B, wait, move B→A, wait, repeat
-    - Modular API: import helpers from `fanuc_tools.motion.joint_motion`
+    - Modular API: import helpers from `fanuc_tools.motion.core.joint_motion`
 
 Run alongside speed_scaling.py to control speed during motion:
     Terminal 1: ros2 launch fanuc_moveit_config fanuc_moveit.launch.py
@@ -56,7 +56,7 @@ from dataclasses import dataclass
 import rclpy
 from rclpy.node import Node
 
-from fanuc_tools.motion.joint_motion import (
+from fanuc_tools.motion.core.joint_motion import (
     GOAL_REJECTED_ERROR_CODE,
     JointMotionClient,
     degrees_to_radians,
@@ -121,7 +121,7 @@ class MoveJointNode(Node):
     Standalone example node that alternates between two joint targets.
 
     For reusable programmatic control, import `JointMotionClient` from
-    `fanuc_tools.motion.joint_motion` instead of this looping example node.
+    `fanuc_tools.motion.core.joint_motion` instead of this looping example node.
     """
 
     def __init__(self):
@@ -167,7 +167,8 @@ class MoveJointNode(Node):
         if now < self.next_move_time:
             if startup_phase and not self.startup_wait_logged:
                 self.get_logger().info(
-                    f'Waiting {self.config.startup_delay:.1f}s startup delay for MoveIt/controllers...'
+                    f'Waiting {self.config.startup_delay:.1f}s startup delay '
+                    'for MoveIt/controllers...'
                 )
                 self.startup_wait_logged = True
             return

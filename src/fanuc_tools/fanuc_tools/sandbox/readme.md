@@ -127,3 +127,73 @@ commander.send_goal([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], vel=0.1)
 - Velocity and acceleration scaling: `0.0` = stopped, `1.0` = full speed
 - Always test with `use_mock:=true` before connecting real hardware
 - Joint names for CRX-10iA/L: `J1, J2, J3, J4, J5, J6`
+
+---
+
+### `joint_sequence_demo.py`
+
+Interactive recorder/replayer for joint waypoints.
+
+**What it does:**
+- Records the current robot joint state as named points at record time
+- Saves and loads those points from JSON
+- Replays the points through MoveIt so you can watch the motion in RViz
+
+**Run in mock mode:**
+```bash
+source /opt/ros/humble/setup.bash
+source ~/ws_fanuc/install/setup.bash
+env -u GTK_PATH -u GTK_PATH_VSCODE_SNAP_ORIG \
+    ros2 launch fanuc_moveit_config fanuc_moveit.launch.py \
+    robot_model:=crx10ia use_mock:=true
+```
+
+Open a second terminal in `src/fanuc_tools/fanuc_tools` and run:
+```bash
+python3 sandbox/joint_sequence_demo.py --file sandbox/joint_sequence.json
+```
+
+Replay is tuned for smoother motion by default:
+- velocity scaling defaults to `0.05`
+- acceleration scaling defaults to `0.05`
+- joint-space interpolation defaults to `5 deg` max step size
+
+For even smoother transitions, lower the interpolation step:
+```bash
+python3 sandbox/joint_sequence_demo.py --file sandbox/joint_sequence.json --interp-step-deg 2.0
+```
+
+To see a ready-made RViz demo sequence replay automatically:
+```bash
+python3 sandbox/joint_sequence_demo.py --file sandbox/joint_sequence.json --demo
+```
+
+Menu:
+- `r` record current joint state
+- `l` list recorded points
+- `s` save points to JSON
+- `o` load points from JSON
+- `p` replay the recorded sequence
+- `c` clear points
+- `q` quit
+
+---
+
+### `plot_joint_velocities_live.py`
+
+Live plot of joint velocities from `/joint_states` to help diagnose jerky motion.
+
+**What it does:**
+- Displays six live plots (J1..J6) in rad/s
+- Uses `JointState.velocity` when available
+- Falls back to velocity estimation from position deltas if needed
+
+**Run:**
+```bash
+python3 sandbox/plot_joint_velocities_live.py --history-sec 10
+```
+
+If your joint names differ, pass them explicitly:
+```bash
+python3 sandbox/plot_joint_velocities_live.py --joints J1,J2,J3,J4,J5,J6
+```

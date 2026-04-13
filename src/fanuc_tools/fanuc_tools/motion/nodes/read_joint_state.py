@@ -30,7 +30,7 @@ Typical Usage (in motion scripts):
 Standalone Usage (monitoring):
     Terminal 1: ros2 launch fanuc_moveit_config fanuc_moveit.launch.py \\
                     robot_model:=crx10ia_l use_mock:=true
-    Terminal 2: python3 -m fanuc_tools.motion.read_joint_state
+    Terminal 2: python3 -m fanuc_tools.motion.nodes.read_joint_state
 
 ROS Topics:
     /joint_states (sensor_msgs.msg.JointState):
@@ -275,7 +275,7 @@ def main():
     Usage:
         Terminal 1: ros2 launch fanuc_moveit_config fanuc_moveit.launch.py \\
                         robot_model:=crx10ia_l use_mock:=true
-        Terminal 2: python3 -m fanuc_tools.motion.read_joint_state
+        Terminal 2: python3 -m fanuc_tools.motion.nodes.read_joint_state
     
     Keyboard:
         Press Ctrl+C to exit cleanly.

@@ -10,7 +10,7 @@ Run with any motion node active:
 import rclpy
 from rclpy.node import Node
 
-from fanuc_tools.motion.speed_control import SCALING_TOPIC, SpeedScalingClient, clamp_speed
+from fanuc_tools.motion.core.speed_control import SCALING_TOPIC, SpeedScalingClient, clamp_speed
 
 
 def parse_speed_sequence(sequence_text: str) -> list[float]:

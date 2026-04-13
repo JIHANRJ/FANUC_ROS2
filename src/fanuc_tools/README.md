@@ -15,8 +15,6 @@ fanuc_tools/
 │   │   ├── move_cartesian.yaml   # Cartesian pose A↔B loop
 │   │   ├── move_linear.yaml      # straight-line square path
 │   │   └── speed_scaling.yaml    # speed override publisher
-│   └── tcp/
-│       └── read_tcp.yaml         # TCP pose reader
 ├── fanuc_tools/
 │   ├── motion/
 │   │   ├── move_joint.py
@@ -25,18 +23,12 @@ fanuc_tools/
 │   │   ├── speed_scaling.py
 │   │   ├── collaborative_speed.py
 │   │   └── jog_ps4.py
-│   └── tcp/
-│       ├── read_tcp.py
-│       └── tf_tcp.py
 ├── launch/
 │   ├── motion/
 │   │   ├── move_joint.launch.py
 │   │   ├── move_cartesian.launch.py
 │   │   ├── move_linear.launch.py
 │   │   └── speed_scaling.launch.py
-│   └── tcp/
-│       ├── load_pointer.launch.py
-│       └── read_tcp.launch.py
 └── urdf/
     └── pointer.urdf.xacro
 ```
@@ -171,27 +163,6 @@ ros2 run fanuc_tools collaborative_speed
 
 ---
 
-### 6. `load_pointer` — Pointer Tool TF Publisher
-
-Publishes the `pointer_link` and `pointer_tcp` TF frames for the pointer tool attachment.  
-Required before running `move_cartesian` or `move_linear`.
-
-```bash
-ros2 launch fanuc_tools load_pointer.launch.py
-```
-
----
-
-### 7. `read_tcp` — TCP Pose Reader
-
-Reads and prints the current TCP (tool centre point) pose from TF.
-
-```bash
-ros2 launch fanuc_tools read_tcp.launch.py
-```
-
----
-
 ## Quick Reference
 
 | Tool | Launch command | Config file |
@@ -200,8 +171,6 @@ ros2 launch fanuc_tools read_tcp.launch.py
 | Cartesian loop | `ros2 launch fanuc_tools move_cartesian.launch.py` | `config/motion/move_cartesian.yaml` |
 | Linear square | `ros2 launch fanuc_tools move_linear.launch.py` | `config/motion/move_linear.yaml` |
 | Speed scaling | `ros2 launch fanuc_tools speed_scaling.launch.py` | `config/motion/speed_scaling.yaml` |
-| Load pointer | `ros2 launch fanuc_tools load_pointer.launch.py` | — |
-| Read TCP | `ros2 launch fanuc_tools read_tcp.launch.py` | `config/tcp/read_tcp.yaml` |
 
 All motion launch files accept:
 
