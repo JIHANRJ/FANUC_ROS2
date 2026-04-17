@@ -132,12 +132,12 @@ commander.send_goal([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], vel=0.1)
 
 ### `joint_sequence_demo.py`
 
-Interactive recorder/replayer for joint waypoints.
+Interactive recorder/replayer for joint waypoints and Cartesian poses.
 
 **What it does:**
-- Records the current robot joint state as named points at record time
+- Records the current robot joint state and TCP Cartesian pose as named points at record time
 - Saves and loads those points from JSON
-- Replays the points through MoveIt so you can watch the motion in RViz
+- Replays the points through MoveIt one point at a time
 
 **Run in mock mode:**
 ```bash
@@ -153,14 +153,17 @@ Open a second terminal in `src/fanuc_tools/fanuc_tools` and run:
 python3 sandbox/joint_sequence_demo.py --file sandbox/joint_sequence.json
 ```
 
-Replay is tuned for smoother motion by default:
+Replay is intentionally slow and direct by default:
 - velocity scaling defaults to `0.05`
 - acceleration scaling defaults to `0.05`
-- joint-space interpolation defaults to `5 deg` max step size
+- no interpolation is used between recorded points
 
-For even smoother transitions, lower the interpolation step:
+If your tool frame or base frame differs, override them explicitly:
 ```bash
-python3 sandbox/joint_sequence_demo.py --file sandbox/joint_sequence.json --interp-step-deg 2.0
+python3 sandbox/joint_sequence_demo.py \
+    --file sandbox/joint_sequence.json \
+    --base-frame base_link \
+    --ee-frame pointer_tcp
 ```
 
 To see a ready-made RViz demo sequence replay automatically:
@@ -176,6 +179,35 @@ Menu:
 - `p` replay the recorded sequence
 - `c` clear points
 - `q` quit
+
+---
+
+### `square_in_plane_demo.py`
+
+Moves the flange around a square that lies on the plane defined by three recorded points.
+
+**What it does:**
+- Reads `joint_sequence.json` by default
+- Ignores any point whose name starts with `zero`
+- Uses the first three remaining points in file order unless you pass `--point-names`
+- Builds a square centered on the first point and keeps the path in that plane
+
+**Run:**
+```bash
+python3 sandbox/square_in_plane_demo.py --length 0.20
+```
+
+If you want to choose the three plane points explicitly:
+```bash
+python3 sandbox/square_in_plane_demo.py \
+    --length 0.20 \
+    --point-names center pnt1 pnt2
+```
+
+To preview the computed square without moving the robot:
+```bash
+python3 sandbox/square_in_plane_demo.py --length 0.20 --dry-run
+```
 
 ---
 

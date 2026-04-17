@@ -52,6 +52,7 @@ setup(
                 'move_linear = fanuc_tools.motion.nodes.move_linear:main',
             'jog_ps4 = fanuc_tools.motion.jog_ps4:main',
             'joint_sequence_demo = fanuc_tools.sandbox.joint_sequence_demo:main',
+            'square_in_plane_demo = fanuc_tools.sandbox.square_in_plane_demo:main',
         ],
     },
 )
